@@ -2,12 +2,21 @@ import 'dart:async';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_password_manager/api/api.dart';
+import 'package:flutter_password_manager/screen/home_screen.dart';
 import 'login_screen.dart';
+
+late Size mq;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const MyApp());
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
+
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]).then((values){
+    Firebase.initializeApp();
+    runApp(const MyApp());
+  });
 }
 
 class MyApp extends StatelessWidget {
@@ -15,12 +24,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    mq = MediaQuery.sizeOf(context);
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Chat App',
       theme: ThemeData(
-        primarySwatch: Colors.orange,
-        cardColor: Colors.transparent,
+        useMaterial3: true,
+        appBarTheme:  AppBarTheme(
+          backgroundColor: Colors.green,
+          elevation: 5,
+          shadowColor: Colors.black.withOpacity(0.5),
+          centerTitle: true,
+          iconTheme: const IconThemeData(color: Colors.white)
+        ),
+        primarySwatch: Colors.green,
         scaffoldBackgroundColor: Colors.white,
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
@@ -31,7 +48,7 @@ class MyApp extends StatelessWidget {
         ),
         textButtonTheme: TextButtonThemeData(
           style: TextButton.styleFrom(
-            foregroundColor: Colors.orange,
+            foregroundColor: Colors.green,
             textStyle: const TextStyle(fontSize: 16),
           ),
         ),
@@ -55,8 +72,13 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      Navigator.pushReplacement(
+      if(APIs.auth.currentUser!=null){
+        Navigator.pushReplacement(
+            context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      } else {
+        Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+      }
     });
   }
 
@@ -68,7 +90,7 @@ class _SplashScreenState extends State<SplashScreen> {
         height: double.infinity,
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.white, Colors.orange],
+            colors: [Colors.white, Colors.green],
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
           ),
@@ -91,9 +113,6 @@ class _SplashScreenState extends State<SplashScreen> {
               ),
             ),
             const SizedBox(height: 20),
-            const CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-            ),
           ],
         ),
       ),
