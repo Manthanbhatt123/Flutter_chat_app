@@ -32,8 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
         FocusScope.of(context).unfocus();
       },
       child: WillPopScope(
-        onWillPop: (){
-          if(_isSearching){
+        onWillPop: () {
+          if (_isSearching) {
             setState(() {
               _isSearching = !_isSearching;
             });
@@ -58,19 +58,20 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     autofocus: true,
                     style: const TextStyle(fontSize: 16, letterSpacing: .5),
-              onChanged: (val) => {
+                    onChanged: (val) => {
                       _searchList.clear(),
-                for(var i in _list){
-                  if(i.name.toLowerCase().contains(val.toLowerCase()) ||
-                      i.email.toLowerCase().contains(val.toLowerCase())
-                  ){
-                    _searchList.add(i)
-                  },
-                  setState(() {
-                    _searchList;
-                  })
-                }
-              },
+                      for (var i in _list)
+                        {
+                          if (i.name
+                                  .toLowerCase()
+                                  .contains(val.toLowerCase()) ||
+                              i.email.toLowerCase().contains(val.toLowerCase()))
+                            {_searchList.add(i)},
+                          setState(() {
+                            _searchList;
+                          })
+                        }
+                    },
                   )
                 : const Text(
                     "Chat App",
@@ -101,7 +102,6 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: const EdgeInsets.only(bottom: 11.0, right: 11.0),
             child: FloatingActionButton(
               onPressed: () {
-                APIs.auth.signOut();
               },
               backgroundColor: Colors.green,
               shape: const CircleBorder(),
@@ -124,19 +124,22 @@ class _HomeScreenState extends State<HomeScreen> {
                 case ConnectionState.done:
                   if (snapshot.hasData) {
                     final data = snapshot.data?.docs;
-                    _list =
-                        data?.map((e) => ChatUser.fromJson(e.data())).toList() ??
-                            [];
+                    _list = data
+                            ?.map((e) => ChatUser.fromJson(e.data()))
+                            .toList() ??
+                        [];
                   }
 
                   if (_list.isNotEmpty) {
                     return ListView.builder(
-                      itemCount:_isSearching ? _searchList.length: _list.length,
+                      itemCount:
+                          _isSearching ? _searchList.length : _list.length,
                       physics: const BouncingScrollPhysics(),
                       padding: EdgeInsets.only(top: mq.height * .02),
                       itemBuilder: (context, index) {
                         return ChatUserCard(
-                          user:_isSearching ? _searchList[index] : _list[index],
+                          user:
+                              _isSearching ? _searchList[index] : _list[index],
                         );
                       },
                     );

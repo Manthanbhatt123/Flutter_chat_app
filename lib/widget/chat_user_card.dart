@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_password_manager/models/chat_user.dart';
+import 'package:flutter_password_manager/screen/chat_screen.dart';
 import 'package:flutter_password_manager/screen/splash_screen.dart';
 
 class ChatUserCard extends StatefulWidget {
@@ -19,7 +20,9 @@ class _ChatUserCardState extends State<ChatUserCard> {
       margin: EdgeInsets.symmetric(horizontal: mq.width * 0.04, vertical: 4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       child: InkWell(
-          onTap: () {},
+          onTap: () {
+            Navigator.push(context, MaterialPageRoute(builder: (_)=>ChatScreen(user: widget.user)));
+          },
           child: ListTile(
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
             tileColor: Colors.white,

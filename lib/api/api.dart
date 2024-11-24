@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/chat_user.dart';
+import '../models/message.dart';
 
 class APIs {
   //For User authentication
@@ -72,10 +73,41 @@ class APIs {
   //for checking user existence
   static Future<void> updateUserInfo() async {
     await firestore.collection('users').doc(auth.currentUser!.uid).update(
-      {
-        'name': me.name,
-        'about':me.about
-      },
+      {'name': me.name, 'about': me.about},
     );
+  }
+
+  /**
+      -Chat Api are under this section
+   */
+
+  static String getConversationId(String id) =>
+      myUser.uid.hashCode <= id.hashCode
+          ? '${myUser.uid}_$id'
+          : '${id}_${myUser.uid}';
+
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllMessages(
+      ChatUser user) {
+    return firestore
+        .collection('chats/${getConversationId(user.id)}/messages/')
+    .orderBy('sent',descending: true)
+        .snapshots();
+  }
+
+  static Future<void> sendMessage(ChatUser chatuser, String msg) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final Message message = Message(
+        msg: msg,
+        toId: chatuser.id,
+        read: '',
+        type: Type.Text,
+        fromId: myUser.uid,
+        sent: time);
+
+    final ref = firestore
+      .collection('chats/${getConversationId(chatuser.id)}/messages/');
+
+    await ref.doc(time).set(message.toJson());
   }
 }
