@@ -29,6 +29,7 @@ class _ChatUserCardState extends State<ChatUserCard> {
               child: CachedNetworkImage(
                 width: mq.height*.055,
                 height: mq.height*.055,
+                fit: BoxFit.fill,
                 imageUrl: "http://via.placeholder.com/350x150",
                 errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.green),
               ),

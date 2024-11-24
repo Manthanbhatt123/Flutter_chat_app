@@ -30,12 +30,22 @@ class MyApp extends StatelessWidget {
       title: 'Chat App',
       theme: ThemeData(
         useMaterial3: true,
-        appBarTheme:  AppBarTheme(
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Colors.green,
+          selectionColor: Colors.green,
+          selectionHandleColor: Colors.green
+        ),
+        appBarTheme:  const AppBarTheme(
           backgroundColor: Colors.green,
           elevation: 5,
-          shadowColor: Colors.black.withOpacity(0.5),
+          shadowColor: Colors.black,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(7),
+            bottomRight: Radius.circular(7)
+          ),
+          ),
           centerTitle: true,
-          iconTheme: const IconThemeData(color: Colors.white)
+          iconTheme: IconThemeData(color: Colors.white)
         ),
         primarySwatch: Colors.green,
         scaffoldBackgroundColor: Colors.white,
@@ -43,7 +53,22 @@ class MyApp extends StatelessWidget {
           filled: true,
           fillColor: Colors.white70,
           border: OutlineInputBorder(
+            borderSide: const BorderSide(color: Colors.green, width: 2),
             borderRadius: BorderRadius.circular(25),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(11),
+            borderSide: const BorderSide(
+              color: Colors.green, // Border color when the field is focused
+              width: 2.0,
+            ),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(11),
+            borderSide: const BorderSide(
+              color: Colors.grey, // Border color when the field is not focused
+              width: 1.0,
+            ),
           ),
         ),
         textButtonTheme: TextButtonThemeData(

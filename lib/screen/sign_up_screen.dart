@@ -1,5 +1,5 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_password_manager/screen/splash_screen.dart';
 
 import '../api/api.dart';
 
@@ -45,52 +45,61 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text(
-          "Sign Up",
-          style: TextStyle(color: Colors.white),
+    return GestureDetector(
+      onTap: () {
+        // Dismiss the keyboard when tapping outside
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text(
+            "Sign Up",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
-      ),
-      body: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Image.asset(
-              "assets/chat_logo.jpg",
-              height: 200,
-            ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: "Email"),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: "Password"),
-              ),
-              const SizedBox(height: 20),
-              TextField(
-                controller: _confirmPasswordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: "Confirm Password"),
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: signUp,
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(25),
-                  ),
-                  padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.symmetric(horizontal: mq.width * .05),
+          child: Center(
+            child: Padding(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Image.asset(
+                  "assets/chat_logo.jpg",
+                  height: 200,
                 ),
-                child: const Text("Sign Up"),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _emailController,
+                    decoration: const InputDecoration(labelText: "Email"),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _passwordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: "Password"),
+                  ),
+                  const SizedBox(height: 20),
+                  TextField(
+                    controller: _confirmPasswordController,
+                    obscureText: true,
+                    decoration: const InputDecoration(labelText: "Confirm Password"),
+                  ),
+                  const SizedBox(height: 20),
+                  ElevatedButton(
+                    onPressed: signUp,
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                    ),
+                    child: const Text("Sign Up"),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         ),
       ),
