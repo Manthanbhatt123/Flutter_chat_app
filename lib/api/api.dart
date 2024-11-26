@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../models/chat_user.dart';
+import '../models/group_messages.dart';
 import '../models/message.dart';
 
 class APIs {
@@ -34,7 +35,6 @@ class APIs {
         .then((user) async {
       if (user.exists) {
         me = ChatUser.fromJson(user.data()!);
-        log("MyData from FireStore \n ${user.data()}");
       } else {
         createUser("user");
       }
@@ -90,7 +90,7 @@ class APIs {
       ChatUser user) {
     return firestore
         .collection('chats/${getConversationId(user.id)}/messages/')
-    .orderBy('sent',descending: true)
+        .orderBy('sent', descending: true)
         .snapshots();
   }
 
@@ -106,8 +106,43 @@ class APIs {
         sent: time);
 
     final ref = firestore
-      .collection('chats/${getConversationId(chatuser.id)}/messages/');
+        .collection('chats/${getConversationId(chatuser.id)}/messages/');
 
     await ref.doc(time).set(message.toJson());
+  }
+
+  /*--------------- group-chat----------------------------------*/
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllGroups() {
+    return firestore.collection('groups').snapshots();
+  }
+
+
+  static String get groupId => firestore.collection('groups').doc().id!;
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllGroupMessages() {
+    return firestore
+        .collection('groups')
+        .doc('Ful476G8xvJ30RsermD8')
+        .collection('messages')
+        .orderBy('sent', descending: true)
+        .snapshots();
+  }
+
+  static Future<void> sendGroupMessage(String msg) async {
+    final time = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final Messages message = Messages(
+        msg: msg, read_by: '', type: '', fromId: myUser.uid, sent: time);
+
+    final ref = firestore.collection('groups').doc('Ful476G8xvJ30RsermD8').collection('messages');
+
+    await ref.doc(time).set(message.toJson());
+  }
+
+  static Future<void> createGroup(Map<String,Object> groupData)async{
+    await FirebaseFirestore.instance.collection('groups').doc(groupId).set(groupData).then((docRef) {
+
+    }).catchError((error) {
+      print("Failed to create group: $error");
+    });
   }
 }

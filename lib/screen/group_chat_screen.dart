@@ -1,26 +1,23 @@
-import 'dart:convert';
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:flutter_password_manager/models/chat_user.dart';
-import 'package:flutter_password_manager/models/message.dart';
 import 'package:flutter_password_manager/screen/splash_screen.dart';
-import 'package:flutter_password_manager/widget/message_card.dart';
-
 import '../api/api.dart';
+import '../models/group_messages.dart';
+import '../models/message.dart';
+import '../widget/group_message_card.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key, required this.user});
+class GroupChatScreen extends StatefulWidget {
 
-  final ChatUser user;
+  const GroupChatScreen({
+    super.key,
+  });
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<GroupChatScreen> createState() => _GroupChatScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
-  List<Message> _list = [];
-  final _textcontroller = TextEditingController();
+class _GroupChatScreenState extends State<GroupChatScreen> {
+  final _textController = TextEditingController();
+  List<Messages> _list = [];
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +36,7 @@ class _ChatScreenState extends State<ChatScreen> {
             children: [
               Expanded(
                 child: StreamBuilder(
-                  stream: APIs.getAllMessages(widget.user),
+                  stream: APIs.getAllGroupMessages(),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
@@ -50,21 +47,19 @@ class _ChatScreenState extends State<ChatScreen> {
                       case ConnectionState.active:
                       case ConnectionState.done:
                         final data = snapshot.data?.docs;
-                          _list = data
-                              ?.map((e) => Message.fromJson(e.data()))
-                              .toList() ??
-                              [];
+                        _list = data
+                            ?.map((e) => Messages.fromJson(e.data()))
+                            .toList() ??
+                            [];
 
                         if (_list.isNotEmpty) {
                           return ListView.builder(
                             reverse: true,
                             itemCount: _list.length,
-                            // _isSearching ? _searchList.length : _list.length,
                             physics: const BouncingScrollPhysics(),
                             padding: EdgeInsets.only(top: mq.height * .02),
                             itemBuilder: (context, index) {
-                              log(_list[index].toString());
-                              return MessageCard(
+                              return GroupMessageCard(
                                 message: _list[index],
                               );
                             },
@@ -103,27 +98,24 @@ class _ChatScreenState extends State<ChatScreen> {
               color: Colors.white,
             ),
           ),
-          SizedBox(
-            width: mq.width * 0.05,
-          ),
+          SizedBox(width: mq.width * 0.05),
           const Icon(
-            Icons.person,
+            Icons.group,
             color: Colors.white,
             size: 25,
           ),
-          SizedBox(
-            width: mq.width * 0.05,
-          ),
+          SizedBox(width: mq.width * 0.05),
           Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                widget.user.name,
-                style: const TextStyle(color: Colors.white, fontSize: 25),
+              const Text(
+                "Name",
+                style: TextStyle(color: Colors.white, fontSize: 25),
               ),
               Text(
-                widget.user.lastActive,
+                "Members".length.toString(),
                 style: const TextStyle(color: Colors.white, fontSize: 11),
-              )
+              ),
             ],
           )
         ],
@@ -153,25 +145,26 @@ class _ChatScreenState extends State<ChatScreen> {
                     child: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: TextField(
-                        controller: _textcontroller,
+                        controller: _textController,
                         keyboardType: TextInputType.multiline,
                         maxLines: null,
                         decoration: InputDecoration(
-                            fillColor: Colors.white,
-                            enabledBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  const BorderSide(color: Colors.transparent),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide:
-                                  const BorderSide(color: Colors.transparent),
-                            ),
-                            filled: true,
-                            hintText: "enter message..",
-                            hintStyle: TextStyle(
-                                color: Colors.black.withOpacity(0.3))),
+                          fillColor: Colors.white,
+                          enabledBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide:
+                            const BorderSide(color: Colors.transparent),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(15),
+                            borderSide:
+                            const BorderSide(color: Colors.transparent),
+                          ),
+                          filled: true,
+                          hintText: "Enter message...",
+                          hintStyle: TextStyle(
+                              color: Colors.black.withOpacity(0.3)),
+                        ),
                       ),
                     ),
                   ),
@@ -204,9 +197,9 @@ class _ChatScreenState extends State<ChatScreen> {
             ),
           ),
           onPressed: () {
-            if(_textcontroller.text.isNotEmpty){
-              APIs.sendMessage(widget.user,_textcontroller.text);
-              _textcontroller.text = '';
+            if (_textController.text.isNotEmpty) {
+              APIs.sendGroupMessage(_textController.text);
+              _textController.text = '';
             }
           },
           child: const Icon(

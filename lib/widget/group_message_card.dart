@@ -6,16 +6,16 @@ import '../models/group_messages.dart';
 import '../models/message.dart';
 import '../screen/splash_screen.dart';
 
-class MessageCard extends StatefulWidget {
-  const MessageCard({super.key, required this.message});
+class GroupMessageCard extends StatefulWidget {
+  const GroupMessageCard({super.key, required this.message});
 
-  final Message message;
+  final Messages message;
 
   @override
-  State<MessageCard> createState() => _MessageCardState();
+  State<GroupMessageCard> createState() => _GroupMessageCardState();
 }
 
-class _MessageCardState extends State<MessageCard> {
+class _GroupMessageCardState extends State<GroupMessageCard> {
 
   @override
   Widget build(BuildContext context) {
