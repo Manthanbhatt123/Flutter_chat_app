@@ -9,7 +9,8 @@ import '../models/message.dart';
 
 class APIs {
   //For User authentication
-  static FirebaseAuth auth = FirebaseAuth.instance;
+  static FirebaseAuth auth = FirebaseAuth.instance..setLanguageCode('en');
+
 
   static User get myUser => auth.currentUser!;
 
@@ -116,30 +117,28 @@ class APIs {
     return firestore.collection('groups').snapshots();
   }
 
+  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllGroupMessages(String groupId) {
 
-  static String get groupId => firestore.collection('groups').doc().id!;
-  static Stream<QuerySnapshot<Map<String, dynamic>>> getAllGroupMessages() {
     return firestore
-        .collection('groups')
-        .doc('Ful476G8xvJ30RsermD8')
-        .collection('messages')
+        .collection('groups/$groupId/messages/')
         .orderBy('sent', descending: true)
         .snapshots();
   }
 
-  static Future<void> sendGroupMessage(String msg) async {
+  static Future<void> sendGroupMessage(String msg,String groupId) async {
     final time = DateTime.now().millisecondsSinceEpoch.toString();
 
     final Messages message = Messages(
         msg: msg, read_by: '', type: '', fromId: myUser.uid, sent: time);
 
-    final ref = firestore.collection('groups').doc('Ful476G8xvJ30RsermD8').collection('messages');
+    final ref = firestore.collection('groups/$groupId/messages/');
 
     await ref.doc(time).set(message.toJson());
+    await firestore.collection('groups').doc(groupId).update({'last_message':msg});
   }
 
   static Future<void> createGroup(Map<String,Object> groupData)async{
-    await FirebaseFirestore.instance.collection('groups').doc(groupId).set(groupData).then((docRef) {
+    await FirebaseFirestore.instance.collection('groups').doc(groupData['group_id'].toString()).set(groupData).then((docRef) {
 
     }).catchError((error) {
       print("Failed to create group: $error");

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,10 +14,14 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]).then((values){
-    Firebase.initializeApp();
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
+   await Firebase.initializeApp();
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.debug,
+
+    );
     runApp(const MyApp());
-  });
+
 }
 
 class MyApp extends StatelessWidget {

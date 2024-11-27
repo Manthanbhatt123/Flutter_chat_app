@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Group {
-  String id;
+  String group_id;
   List<String> members;
   Timestamp lastMessageTime;
   String name;
@@ -9,7 +9,7 @@ class Group {
   String lastMessage;
 
   Group({
-    required this.id,
+    required this.group_id,
     required this.members,
     required this.lastMessageTime,
     required this.name,
@@ -20,7 +20,7 @@ class Group {
   // From JSON
   factory Group.fromJson(Map<String, dynamic> json) {
     return Group(
-      id: json['id'] ?? '',
+      group_id: json['group_id'] ?? '',
       createdAt: json['created_at'] ??  Timestamp.now(),
       lastMessage: json['last_message'] ?? '',
       lastMessageTime: json['last_message_time'] ?? Timestamp.now(),
@@ -32,7 +32,7 @@ class Group {
   // To JSON
   Map<String, dynamic> toJson() {
     return {
-      'id':id,
+      'group_id':group_id,
       'members': members,
       'last_message_time': lastMessageTime,
       'name': name,

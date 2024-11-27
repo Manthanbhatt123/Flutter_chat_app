@@ -29,16 +29,15 @@ class _ChatUserCardState extends State<ChatUserCard> {
             style: ListTileStyle.drawer,
             leading: ClipRRect(
               borderRadius: BorderRadius.circular(mq.height*.3),
-              child: CachedNetworkImage(
-                width: mq.height*.055,
-                height: mq.height*.055,
-                fit: BoxFit.fill,
-                imageUrl: "http://via.placeholder.com/350x150",
-                errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.green),
+              child: const CircleAvatar(
+                backgroundColor: Colors.green,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
               ),
             ),
             title: Text(widget.user.name),
-            subtitle: Text(widget.user.about,style: const TextStyle(fontSize: 12), maxLines: 1),
             trailing: Container(width: 15,height: 15,decoration:BoxDecoration(color: Colors.green,borderRadius: BorderRadius.circular(10)),),
           )),
     );

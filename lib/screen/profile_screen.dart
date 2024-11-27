@@ -96,13 +96,10 @@ class _UserProfileState extends State<UserProfile> {
                     )
                         :ClipRRect(
                       borderRadius: BorderRadius.circular(mq.height * .3),
-                      child: CachedNetworkImage(
-                        width: mq.height * .3,
-                        height: mq.height * .3,
-                        fit: BoxFit.fill,
-                        imageUrl: "http://via.placeholder.com/350x150",
-                        errorWidget: (context, url, error) =>
-                        const Icon(Icons.error, color: Colors.green),
+                      child: const CircleAvatar(
+                        minRadius: 125,
+                        backgroundColor: Colors.green,
+                        child: Icon(Icons.person,size: 115,color: Colors.white,),
                       ),
                     ),
                     Positioned(
@@ -125,7 +122,7 @@ class _UserProfileState extends State<UserProfile> {
                   height: mq.height * .03,
                 ),
                 Text(
-                  widget.user.email,
+                  widget.user.name,
                   softWrap: true,
                   style: TextStyle(
                     fontSize: 25,
@@ -200,6 +197,11 @@ class _UserProfileState extends State<UserProfile> {
                     }
                   },
                 ),
+                SizedBox(height: mq.height*.07,),
+                const Text('Privacy',style: TextStyle(color: Colors.black45),),
+                SizedBox(height: mq.height*.01,),
+                const Text('TERMS & CONDITIONS',style: TextStyle(color: Colors.black45),),
+
               ],
             ),
           ),

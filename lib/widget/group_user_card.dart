@@ -4,8 +4,10 @@ import 'package:flutter_password_manager/models/group.dart';
 import 'package:flutter_password_manager/screen/group_chat_screen.dart';
 
 import '../screen/splash_screen.dart';
+
 class GroupUserCard extends StatefulWidget {
   final Group group;
+
   const GroupUserCard({super.key, required this.group});
 
   @override
@@ -21,26 +23,35 @@ class _GroupUserCardState extends State<GroupUserCard> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
       child: InkWell(
           onTap: () {
-            Navigator.push(context, MaterialPageRoute(builder: (_)=>GroupChatScreen
-              ()));
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (_) => GroupChatScreen(group: widget.group)));
           },
           child: ListTile(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
             tileColor: Colors.white,
             style: ListTileStyle.drawer,
             leading: ClipRRect(
-              borderRadius: BorderRadius.circular(mq.height*.3),
-              child: CachedNetworkImage(
-                width: mq.height*.055,
-                height: mq.height*.055,
-                fit: BoxFit.fill,
-                imageUrl: "http://via.placeholder.com/350x150",
-                errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.green),
+              borderRadius: BorderRadius.circular(mq.height * .3),
+              child: const CircleAvatar(
+                backgroundColor: Colors.green,
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
+                ),
               ),
             ),
             title: Text(widget.group.name),
-            subtitle: Text(widget.group.lastMessage,style: const TextStyle(fontSize: 12), maxLines: 1),
-            trailing: Container(width: 15,height: 15,decoration:BoxDecoration(color: Colors.green,borderRadius: BorderRadius.circular(10)),),
+            subtitle: Text(widget.group.lastMessage,
+                style: const TextStyle(fontSize: 12), maxLines: 1),
+            trailing: Container(
+              width: 15,
+              height: 15,
+              decoration: BoxDecoration(
+                  color: Colors.green, borderRadius: BorderRadius.circular(10)),
+            ),
           )),
     );
   }

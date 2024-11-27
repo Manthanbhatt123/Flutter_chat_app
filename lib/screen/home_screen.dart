@@ -22,6 +22,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
   List<ChatUser> _list = [];
   List<Group> groups = [];
   final List<ChatUser> _searchList = [];
+  final List<Group> _searchGroup = [];
   bool _isSearching = false;
 
   late TabController _tabController;
@@ -63,25 +64,43 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
             toolbarHeight: 70,
             title: _isSearching
                 ? TextField(
-              decoration: const InputDecoration(
+              decoration: _tabController.index==0 ?
+              const InputDecoration(
                 border: InputBorder.none,
                 hintText: "Name,email,...",
-              ),
+              ) :const InputDecoration(
+                border: InputBorder.none,
+                hintText: "group name..",
+              ) ,
               autofocus: true,
               style: const TextStyle(fontSize: 16, letterSpacing: .5),
               onChanged: (val) => {
                 _searchList.clear(),
-                for (var i in _list)
-                  {
-                    if (i.name
-                        .toLowerCase()
-                        .contains(val.toLowerCase()) ||
-                        i.email.toLowerCase().contains(val.toLowerCase()))
-                      {_searchList.add(i)},
-                    setState(() {
-                      _searchList;
-                    })
-                  }
+                if(_tabController.index == 0){
+                  for (var i in _list)
+                    {
+                      if (i.name
+                          .toLowerCase()
+                          .contains(val.toLowerCase()) ||
+                          i.email.toLowerCase().contains(val.toLowerCase()))
+                        {_searchList.add(i)},
+                      setState(() {
+                        _searchList;
+                      })
+                    }
+                } else {
+                  for (var i in groups)
+                    {
+                      if (i.name
+                          .toLowerCase()
+                          .contains(val.toLowerCase()) ||
+                          i.name.toLowerCase().contains(val.toLowerCase()))
+                        {_searchGroup.add(i)},
+                      setState(() {
+                        _searchGroup;
+                      })
+                    }
+                }
               },
             )
                 : const Text(
@@ -223,11 +242,11 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               print(groupId);
 
               return ListView.builder(
-                itemCount: groups.length,
+                itemCount: _isSearching ? _searchGroup.length : groups.length,
                 physics: const BouncingScrollPhysics() ,
                 padding: const EdgeInsets.only(top: 8),
                 itemBuilder: (context, index) {
-                  return GroupUserCard(group: groups[index],);
+                  return GroupUserCard(group:_isSearching ? _searchGroup[index] : groups[index]);
                 },
               );
             } else {

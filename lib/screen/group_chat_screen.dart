@@ -1,14 +1,17 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_password_manager/models/group.dart';
 import 'package:flutter_password_manager/screen/splash_screen.dart';
 import '../api/api.dart';
 import '../models/group_messages.dart';
-import '../models/message.dart';
 import '../widget/group_message_card.dart';
 
 class GroupChatScreen extends StatefulWidget {
 
+  final Group group;
   const GroupChatScreen({
-    super.key,
+    super.key, required this.group,
   });
 
   @override
@@ -21,6 +24,7 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log("groupId \n"+widget.group.group_id.toString());
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: SafeArea(
@@ -36,17 +40,19 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
             children: [
               Expanded(
                 child: StreamBuilder(
-                  stream: APIs.getAllGroupMessages(),
+                  stream: APIs.getAllGroupMessages(widget.group.group_id),
                   builder: (context, snapshot) {
                     switch (snapshot.connectionState) {
                       case ConnectionState.waiting:
                       case ConnectionState.none:
                         return const Center(
-                          child: CircularProgressIndicator(),
+                          // child: CircularProgressIndicator(),
                         );
                       case ConnectionState.active:
                       case ConnectionState.done:
+
                         final data = snapshot.data?.docs;
+
                         _list = data
                             ?.map((e) => Messages.fromJson(e.data()))
                             .toList() ??
@@ -85,6 +91,10 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
   }
 
   Widget _appBar() {
+    String members = '';
+     for (var value in widget.group.members) {
+        members = '$value ,';
+ }
     return Padding(
       padding: EdgeInsets.only(top: mq.height * 0.03),
       child: Row(
@@ -108,12 +118,12 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                "Name",
-                style: TextStyle(color: Colors.white, fontSize: 25),
+              Text(
+                widget.group.name,
+                style: const TextStyle(color: Colors.white, fontSize: 25) ,
               ),
               Text(
-                "Members".length.toString(),
+                members,
                 style: const TextStyle(color: Colors.white, fontSize: 11),
               ),
             ],
@@ -198,7 +208,8 @@ class _GroupChatScreenState extends State<GroupChatScreen> {
           ),
           onPressed: () {
             if (_textController.text.isNotEmpty) {
-              APIs.sendGroupMessage(_textController.text);
+              APIs.sendGroupMessage(_textController.text.trim(),widget.group.group_id);
+
               _textController.text = '';
             }
           },
