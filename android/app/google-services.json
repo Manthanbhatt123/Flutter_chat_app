@@ -7,6 +7,25 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:781578576614:android:8ffd2dc5258f9425529127",
+        "android_client_info": {
+          "package_name": "com.example.firebase_password_manager"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD7g9pb8LRlpeYvTL6w5m2A6JYlV4vqG3M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:781578576614:android:c9b4e6769d93e994529127",
         "android_client_info": {
           "package_name": "com.example.flutter_password_manager"
