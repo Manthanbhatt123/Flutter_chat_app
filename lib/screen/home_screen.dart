@@ -76,12 +76,13 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
               style: const TextStyle(fontSize: 16, letterSpacing: .5),
               onChanged: (val) => {
                 _searchList.clear(),
+                _searchGroup.clear(),
                 if(_tabController.index == 0){
                   for (var i in _list)
                     {
                       if (i.name
                           .toLowerCase()
-                          .contains(val.toLowerCase()) ||
+                          .contains(val.toLowerCase())  ||
                           i.email.toLowerCase().contains(val.toLowerCase()))
                         {_searchList.add(i)},
                       setState(() {
@@ -121,6 +122,10 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
                 onPressed: () {
                   setState(() {
                     _isSearching = !_isSearching;
+                    if(_isSearching){
+                      _searchList.clear();
+                      _searchGroup.clear();
+                    }
                   });
                 },
                 icon: Icon(_isSearching ? Icons.close_rounded : Icons.search),
@@ -172,7 +177,7 @@ class _HomeScreenState extends State<HomeScreen> with SingleTickerProviderStateM
     showModalBottomSheet(
       context: context,
       builder: (context) {
-        return GroupCreateBottomSheet();
+        return const GroupCreateBottomSheet();
       },
     );
   }

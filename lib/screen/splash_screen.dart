@@ -1,7 +1,7 @@
 import 'dart:async';
-
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_password_manager/api/api.dart';
@@ -14,14 +14,29 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky);
 
-  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp,DeviceOrientation.portraitDown]);
-   await Firebase.initializeApp();
-    await FirebaseAppCheck.instance.activate(
-      androidProvider: AndroidProvider.debug,
+  SystemChrome.setPreferredOrientations(
+      [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]).then((onValue)=>{
+        Firebase.initializeApp(),
+    FirebaseAppCheck.instance.activate(
+      androidProvider:  AndroidProvider.playIntegrity
+    ),
+    FirebaseAppCheck.instance.setTokenAutoRefreshEnabled(true)
 
-    );
-    runApp(const MyApp());
+  });
 
+    // if (kIsWeb) {
+  /*} else {
+    Firebase.initializeApp();
+  }*/
+
+/*  FirebaseApp.initializeApp(*/
+/*context=*/
+/* this)
+  val appCheck: FirebaseAppCheck = FirebaseAppCheck.getInstance()
+  appCheck.installAppCheckProviderFactory(
+      PlayIntegrityAppCheckProviderFactory.getInstance()
+  )*/
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -36,22 +51,20 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         textSelectionTheme: const TextSelectionThemeData(
-          cursorColor: Colors.green,
-          selectionColor: Colors.green,
-          selectionHandleColor: Colors.green
-        ),
-        appBarTheme:  const AppBarTheme(
-          backgroundColor: Colors.green,
-          elevation: 5,
-          shadowColor: Colors.black,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(
-              bottomLeft: Radius.circular(7),
-            bottomRight: Radius.circular(7)
-          ),
-          ),
-          centerTitle: true,
-          iconTheme: IconThemeData(color: Colors.white)
-        ),
+            cursorColor: Colors.green,
+            selectionColor: Colors.green,
+            selectionHandleColor: Colors.green),
+        appBarTheme: const AppBarTheme(
+            backgroundColor: Colors.green,
+            elevation: 5,
+            shadowColor: Colors.black,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(7),
+                  bottomRight: Radius.circular(7)),
+            ),
+            centerTitle: true,
+            iconTheme: IconThemeData(color: Colors.white)),
         primarySwatch: Colors.green,
         scaffoldBackgroundColor: Colors.white,
         inputDecorationTheme: InputDecorationTheme(
@@ -102,12 +115,12 @@ class _SplashScreenState extends State<SplashScreen> {
   void initState() {
     super.initState();
     Timer(const Duration(seconds: 3), () {
-      if(APIs.auth.currentUser!=null){
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (context) => const HomeScreen()));
+      if (APIs.auth.currentUser != null) {
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const HomeScreen()));
       } else {
-        Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const LoginScreen()));
+        Navigator.pushReplacement(context,
+            MaterialPageRoute(builder: (context) => const LoginScreen()));
       }
     });
   }

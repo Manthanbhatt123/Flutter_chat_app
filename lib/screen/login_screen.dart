@@ -20,32 +20,38 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Future<void> login() async {
     Dialogs.showProgressBar(context);
-    if (_nameController.text.isNotEmpty && _emailController.text.isNotEmpty && _passwordController.text.isNotEmpty) {
+    if (_nameController.text.isNotEmpty &&
+        _emailController.text.isNotEmpty &&
+        _passwordController.text.isNotEmpty) {
       try {
-
-        await APIs.auth.signInWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        ).then((_) async =>  {
-        Navigator.pop(context),
-
-            if((await APIs.userExist())){
-    Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => const HomeScreen()),
-    ),
-    } else {
-    APIs.createUser(_nameController.text).then((_){
-    Navigator.pushReplacement(
-    context,
-    MaterialPageRoute(builder: (context) => const HomeScreen()),
-    );
-    })
-    }
-        },
-        );
-
-
+        await APIs.auth
+            .signInWithEmailAndPassword(
+              email: _emailController.text.trim(),
+              password: _passwordController.text.trim(),
+            )
+            .then(
+              (_) async => {
+                Navigator.pop(context),
+                if ((await APIs.userExist()))
+                  {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const HomeScreen()),
+                    ),
+                  }
+                else
+                  {
+                    APIs.createUser(_nameController.text).then((_) {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const HomeScreen()),
+                      );
+                    })
+                  }
+              },
+            );
       } catch (e) {
         Navigator.pop(context);
         Dialogs.snackBar(context, e.toString());
@@ -66,12 +72,11 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Scaffold(
         appBar: AppBar(
           title: const Text(
-          "Login",
-          style: TextStyle(color: Colors.white),
-        ),
+            "Login",
+            style: TextStyle(color: Colors.white),
+          ),
         ),
         body: SingleChildScrollView(
-
           child: Center(
             child: Padding(
               padding: const EdgeInsets.all(20),
@@ -106,7 +111,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(25),
                         ),
-                        padding: const EdgeInsets.symmetric(vertical: 15, horizontal: 50),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 15, horizontal: 50),
                       ),
                       child: const Text("Login"),
                     ),
@@ -118,10 +124,14 @@ class _LoginScreenState extends State<LoginScreen> {
                           onPressed: () {
                             Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => const SignUpScreen()),
+                              MaterialPageRoute(
+                                  builder: (context) => const SignUpScreen()),
                             );
                           },
-                          child: const Text("Sign Up" , style: TextStyle(color: Colors.green),),
+                          child: const Text(
+                            "Sign Up",
+                            style: TextStyle(color: Colors.green),
+                          ),
                         ),
                       ],
                     ),

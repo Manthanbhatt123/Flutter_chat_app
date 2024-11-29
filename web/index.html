@@ -1,6 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <script type="module">
+    // Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyCEIzcJYUQGoYps-SOe9c_Kc1c1tlmKorw",
+  authDomain: "flutter-password-manager-d32cf.firebaseapp.com",
+  projectId: "flutter-password-manager-d32cf",
+  storageBucket: "flutter-password-manager-d32cf.firebasestorage.app",
+  messagingSenderId: "781578576614",
+  appId: "1:781578576614:web:ba9a4038a8212ad5529127"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+  </script>
   <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
@@ -35,24 +54,5 @@
 <body>
   <script src="flutter_bootstrap.js" async></script>
 
-  <script type="module">
-  // Import the functions you need from the SDKs you need
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js";
-  // TODO: Add SDKs for Firebase products that you want to use
-  // https://firebase.google.com/docs/web/setup#available-libraries
-
-  // Your web app's Firebase configuration
-  var firebaseConfig = {
-    apiKey: "AIzaSyCEIzcJYUQGoYps-SOe9c_Kc1c1tlmKorw",
-    authDomain: "flutter-password-manager-d32cf.firebaseapp.com",
-    projectId: "flutter-password-manager-d32cf",
-    storageBucket: "flutter-password-manager-d32cf.firebasestorage.app",
-    messagingSenderId: "781578576614",
-    appId: "1:781578576614:web:0065198f35ae709a529127"
-  };
-
-  // Initialize Firebase
-  const app = initializeApp(firebaseConfig);
-</script>
 </body>
 </html>

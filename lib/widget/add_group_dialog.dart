@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_password_manager/api/api.dart';
 
 class GroupCreateBottomSheet extends StatefulWidget {
-  const GroupCreateBottomSheet({Key? key}) : super(key: key);
+  const GroupCreateBottomSheet({super.key});
 
   @override
   State<GroupCreateBottomSheet> createState() => _GroupCreateBottomSheetState();

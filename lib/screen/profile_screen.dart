@@ -25,6 +25,7 @@ class _UserProfileState extends State<UserProfile> {
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
       onTap: () {
         // Dismiss the keyboard when tapping outside
@@ -33,7 +34,7 @@ class _UserProfileState extends State<UserProfile> {
       child: Scaffold(
         backgroundColor: Colors.white70.withOpacity(0.92),
         appBar: AppBar(
-          toolbarHeight: mq.height * .09,
+          toolbarHeight: mq.height * .07,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
             onPressed: () {
@@ -51,14 +52,14 @@ class _UserProfileState extends State<UserProfile> {
             onPressed: () async {
               Dialogs.showProgressBar(context);
               await APIs.auth.signOut().then((_) => {
-                    Navigator.pop(context),
-                    Navigator.pop(context),
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (_) => const LoginScreen()))
-                  });
+                Navigator.pop(context),
+                Navigator.pop(context),
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (_) => const LoginScreen()))
+              });
             },
             shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
+            RoundedRectangleBorder(borderRadius: BorderRadius.circular(35)),
             backgroundColor: Colors.redAccent,
             label: const Text(
               'Logout',
@@ -78,38 +79,34 @@ class _UserProfileState extends State<UserProfile> {
             key: _formKey,
             child: Column(
               children: [
-                SizedBox(
-                  width: mq.width,
-                  height: mq.height * .05,
-                ),
+                SizedBox(height: mq.height * .05),
                 Stack(
                   children: [
-                    _avatar!=null
-                        ?ClipRRect(
-                      borderRadius: BorderRadius.circular(mq.height * .3),
-                      child: Image.file(
+                    ClipOval(
+                      child: _avatar != null
+                          ? Image.file(
                         _avatar!,
-                        width: mq.height * .3,
-                        height: mq.height * .3,
-                        fit: BoxFit.fill,
+                        width: mq.height * .2,
+                        height: mq.height * .2,
+                        fit: BoxFit.cover,
                       )
-                    )
-                        :ClipRRect(
-                      borderRadius: BorderRadius.circular(mq.height * .3),
-                      child: const CircleAvatar(
-                        minRadius: 125,
+                          : CircleAvatar(
+                        radius: mq.height * .1,
                         backgroundColor: Colors.green,
-                        child: Icon(Icons.person,size: 115,color: Colors.white,),
+                        child: const Icon(
+                          Icons.person,
+                          size: 115,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     Positioned(
-                      top: 0,
-                      right: -20,
+                      bottom: 0,
+                      right: 0,
                       child: MaterialButton(
-                        onPressed: () {
-                          _showBottomSheet();
-                        },
+                        onPressed: _showBottomSheet,
                         shape: const CircleBorder(),
+                        color: Colors.white,
                         child: const Icon(
                           Icons.edit,
                           color: Colors.green,
@@ -118,9 +115,7 @@ class _UserProfileState extends State<UserProfile> {
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: mq.height * .03,
-                ),
+                SizedBox(height: mq.height * .03),
                 Text(
                   widget.user.name,
                   softWrap: true,
@@ -129,54 +124,33 @@ class _UserProfileState extends State<UserProfile> {
                     color: Colors.black.withOpacity(0.7),
                   ),
                 ),
-                SizedBox(
-                  height: mq.height * .03,
-                ),
+                SizedBox(height: mq.height * .03),
                 TextFormField(
                   onSaved: (val) => {APIs.me.name = val ?? ''},
                   validator: (val) =>
-                      val != null && val.isNotEmpty ? null : "Required",
+                  val != null && val.isNotEmpty ? null : "Required",
                   decoration: const InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.person,
-                      color: Colors.green,
-                    ),
-                    hintText: "eg: John ",
+                    prefixIcon: Icon(Icons.person, color: Colors.green),
+                    hintText: "eg: John",
                     hintStyle: TextStyle(color: Colors.black26),
-                    label: Text(
-                      "Name",
-                      style: TextStyle(color: Colors.green),
-                    ),
+                    label: Text("Name", style: TextStyle(color: Colors.green)),
                   ),
                 ),
-                SizedBox(
-                  height: mq.height * .02,
-                ),
+                SizedBox(height: mq.height * .02),
                 TextFormField(
                   onSaved: (val) => {APIs.me.about = val ?? ''},
                   validator: (val) =>
-                      val != null && val.isNotEmpty ? null : "Required",
+                  val != null && val.isNotEmpty ? null : "Required",
                   decoration: const InputDecoration(
-                    prefixIcon: Icon(
-                      Icons.info_outline,
-                      color: Colors.green,
-                    ),
-                    hintText: "eg: John@example ",
+                    prefixIcon: Icon(Icons.info_outline, color: Colors.green),
+                    hintText: "eg: Enthusiastic developer",
                     hintStyle: TextStyle(color: Colors.black26),
-                    label: Text(
-                      "About",
-                      style: TextStyle(color: Colors.green),
-                    ),
+                    label: Text("About", style: TextStyle(color: Colors.green)),
                   ),
                 ),
-                SizedBox(
-                  height: mq.height * .02,
-                ),
+                SizedBox(height: mq.height * .02),
                 ElevatedButton.icon(
-                  icon: const Icon(
-                    Icons.edit,
-                    color: Colors.green,
-                  ),
+                  icon: const Icon(Icons.edit, color: Colors.green),
                   style: ElevatedButton.styleFrom(
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(25),
@@ -190,18 +164,46 @@ class _UserProfileState extends State<UserProfile> {
                   ),
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
-                      Navigator.pop(context);
                       _formKey.currentState!.save();
                       APIs.updateUserInfo().then((_) =>
                           Dialogs.snackBar(context, "User profile updated"));
                     }
                   },
                 ),
-                SizedBox(height: mq.height*.07,),
-                const Text('Privacy',style: TextStyle(color: Colors.black45),),
-                SizedBox(height: mq.height*.01,),
-                const Text('TERMS & CONDITIONS',style: TextStyle(color: Colors.black45),),
-
+                SizedBox(height: mq.height * .07),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showPolicyDialog(
+                          context, 'Privacy Policy', "By using this app, you agree to follow the rules. "
+                          "Be respectful and don’t share harmful, illegal, or inappropriate content. "
+                          "Your personal information is kept private,"
+                          " but some data may be used to improve the app. "
+                          "Keep your account details safe and don’t share them with anyone.");
+                    });
+                  },
+                  child: const Text(
+                    'Privacy',
+                    style: TextStyle(color: Colors.black45),
+                  ),
+                ),
+                SizedBox(height: mq.height * .01),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _showPolicyDialog(context, 'Terms & Conditions',
+                          "By using this app, you agree to follow the rules. "
+                              "Be respectful and don’t share harmful, illegal, or inappropriate content. "
+                              "Your personal information is kept private,"
+                              " but some data may be used to improve the app. "
+                              "Keep your account details safe and don’t share them with anyone.");
+                    });
+                  },
+                  child: const Text(
+                    'TERMS & CONDITIONS',
+                    style: TextStyle(color: Colors.black45),
+                  ),
+                ),
               ],
             ),
           ),
@@ -209,77 +211,89 @@ class _UserProfileState extends State<UserProfile> {
       ),
     );
   }
-
+  void _showPolicyDialog(BuildContext context, String title, String content) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          title: Text(
+            title,
+            style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.green),
+          ),
+          content: Text(content),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context); // Close the dialog
+              },
+              child: const Text(
+                'Close',
+                style: TextStyle(color: Colors.green),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
   void _showBottomSheet() {
     showModalBottomSheet(
-        context: context,
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(25),
-            topRight: Radius.circular(25),
-          ),
+      context: context,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(25),
+          topRight: Radius.circular(25),
         ),
-        builder: (_) {
-          return ListView(
-            shrinkWrap: true,
-            padding:
-                EdgeInsets.only(top: mq.height * .02, bottom: mq.height * .05),
-            children: [
-              const Padding(
-                padding: EdgeInsets.only(bottom: 15.0),
-                child: Text(
-                  "Image Picker",
-                  textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+      ),
+      builder: (_) {
+        return ListView(
+          shrinkWrap: true,
+          padding:
+          EdgeInsets.only(top: mq.height * .02, bottom: mq.height * .05),
+          children: [
+            const Padding(
+              padding: EdgeInsets.only(bottom: 15.0),
+              child: Text(
+                "Image Picker",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ElevatedButton(
+                  onPressed: () => _pickImage(ImageSource.gallery),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 35),
+                    backgroundColor: Colors.green,
+                  ),
+                  child: const Icon(Icons.photo, color: Colors.white, size: 25),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  ElevatedButton(
-                    onPressed: () =>_pickImage(ImageSource.gallery),
-                    style: ElevatedButton.styleFrom(
-                        elevation: 3,
-                        shadowColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 35),
-                        backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    child: const Icon(
-                      Icons.photo,
-                      color: Colors.white,
-                      size: 25,
-                    ),
+                ElevatedButton(
+                  onPressed: () => _pickImage(ImageSource.camera),
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 35),
+                    backgroundColor: Colors.green,
                   ),
-                  ElevatedButton(
-                    onPressed:()=> _pickImage(ImageSource.camera),
-                    style: ElevatedButton.styleFrom(
-                        elevation: 3,
-                        shadowColor: Colors.green,
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 35),
-                        backgroundColor: Colors.green,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5))),
-                    child: const Icon(
-                      Icons.camera,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          );
-        });
+                  child: const Icon(Icons.camera, color: Colors.white, size: 25),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> _pickImage(ImageSource source) async {
     bool permissionGranted = await checkPermissions(source);
     if (permissionGranted) {
-      final ImagePicker _picker = ImagePicker();
-      final XFile? image = await _picker.pickImage(source: source);
+      final ImagePicker picker = ImagePicker();
+      final XFile? image = await picker.pickImage(source: source);
 
       if (image != null) {
         setState(() {
